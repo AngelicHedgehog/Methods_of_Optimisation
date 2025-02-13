@@ -1,0 +1,349 @@
+\documentclass[a4paper, 14pt]{extarticle}
+
+% Поля
+%--------------------------------------
+\usepackage{geometry}
+\geometry{a4paper,tmargin=2cm,bmargin=2cm,lmargin=3cm,rmargin=1cm}
+%--------------------------------------
+
+
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc} 
+\usepackage[english, main=russian]{babel}
+%--------------------------------------
+
+\usepackage{textcomp}
+
+% Красная строка
+%--------------------------------------
+\usepackage{indentfirst}               
+%--------------------------------------             
+
+
+%Graphics
+%--------------------------------------
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{wrapfig}
+%--------------------------------------
+
+% Полуторный интервал
+%--------------------------------------
+\linespread{1.3}                    
+%--------------------------------------
+
+%Выравнивание и переносы
+%--------------------------------------
+% Избавляемся от переполнений
+\sloppy
+% Запрещаем разрыв страницы после первой строки абзаца
+\clubpenalty=10000
+% Запрещаем разрыв страницы после последней строки абзаца
+\widowpenalty=10000
+%--------------------------------------
+
+%Списки
+\usepackage{enumitem}
+
+%Подписи
+\usepackage{caption} 
+
+%Гиперссылки
+\usepackage{hyperref}
+
+\hypersetup {
+	unicode=true
+}
+
+%Рисунки
+%--------------------------------------
+\DeclareCaptionLabelSeparator*{emdash}{~--- }
+\captionsetup[figure]{labelsep=emdash,font=onehalfspacing,position=bottom}
+%--------------------------------------
+
+\usepackage{tempora}
+
+%Листинги
+%--------------------------------------
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\footnotesize, 
+  %basicstyle=\footnotesize\AnkaCoder,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks shoulbd only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=t,                    % sets the caption-position to bottom
+  inputencoding=utf8,
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\bf,       % keyword style
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  xleftmargin=25pt,
+  xrightmargin=25pt,
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  tabsize=2,                       % sets default tabsize to 8 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+%--------------------------------------
+
+%%% Математические пакеты %%%
+%--------------------------------------
+\usepackage{amsthm,amsfonts,amsmath,amssymb,amscd}  % Математические дополнения от AMS
+\usepackage{mathtools}                              % Добавляет окружение multlined
+\usepackage[perpage]{footmisc}
+%--------------------------------------
+
+%--------------------------------------
+%			НАЧАЛО ДОКУМЕНТА
+%--------------------------------------
+
+\begin{document}
+
+%--------------------------------------
+%			ТИТУЛЬНЫЙ ЛИСТ
+%--------------------------------------
+\begin{titlepage}
+\thispagestyle{empty}
+\newpage
+
+
+%Шапка титульного листа
+%--------------------------------------
+\vspace*{-60pt}
+\hspace{-65pt}
+\begin{minipage}{0.3\textwidth}
+\hspace*{-20pt}\centering
+\includegraphics[width=\textwidth]{emblem}
+\end{minipage}
+\begin{minipage}{0.67\textwidth}\small \textbf{
+\vspace*{-0.7ex}
+\hspace*{-6pt}\centerline{Министерство науки и высшего образования Российской Федерации}
+\vspace*{-0.7ex}
+\centerline{Федеральное государственное бюджетное образовательное учреждение }
+\vspace*{-0.7ex}
+\centerline{высшего образования}
+\vspace*{-0.7ex}
+\centerline{<<Московский государственный технический университет}
+\vspace*{-0.7ex}
+\centerline{имени Н.Э. Баумана}
+\vspace*{-0.7ex}
+\centerline{(национальный исследовательский университет)>>}
+\vspace*{-0.7ex}
+\centerline{(МГТУ им. Н.Э. Баумана)}}
+\end{minipage}
+%--------------------------------------
+
+%Полосы
+%--------------------------------------
+\vspace{-25pt}
+\hspace{-35pt}\rule{\textwidth}{2.3pt}
+
+\vspace*{-20.3pt}
+\hspace{-35pt}\rule{\textwidth}{0.4pt}
+%--------------------------------------
+
+\vspace{1.5ex}
+\hspace{-35pt} \noindent \small ФАКУЛЬТЕТ\hspace{80pt} <<Информатика и системы управления>>
+
+\vspace*{-16pt}
+\hspace{47pt}\rule{0.83\textwidth}{0.4pt}
+
+\vspace{0.5ex}
+\hspace{-35pt} \noindent \small КАФЕДРА\hspace{50pt} <<Теоретическая информатика и компьютерные технологии>>
+
+\vspace*{-16pt}
+\hspace{30pt}\rule{0.866\textwidth}{0.4pt}
+  
+\vspace{11em}
+
+\begin{center}
+\Large {\bf Лабораторная работа № 2} \\ 
+\large {\bf по курсу <<Методы оптимизации>>} \\
+\large <<Сравнение одномерных методов оптимизации>> 
+\end{center}\normalsize
+
+\vspace{8em}
+
+
+\begin{flushright}
+  {Студент группы ИУ9-82Б Виленский С. Д. \hspace*{15pt}\\ 
+  \vspace{2ex}
+  Преподаватель Посевин Д. П.\hspace*{15pt}}
+\end{flushright}
+
+\bigskip
+
+\vfill
+ 
+
+\begin{center}
+\textsl{Москва 2024}
+\end{center}
+\end{titlepage}
+%--------------------------------------
+%		КОНЕЦ ТИТУЛЬНОГО ЛИСТА
+%--------------------------------------
+
+\renewcommand{\ttdefault}{pcr}
+
+\setlength{\tabcolsep}{3pt}
+\newpage
+\setcounter{page}{2}
+
+\section{Задание}\label{Sect::task}
+
+Проанализировать функцию на унимодальность и выпуклость.
+Сравнить по скорости сходимости такие методы оптимизации, как метод сходящихся отрезков, метод деления золотым сечением и метод деления числами последовательности Фибоначчи.
+
+\section{Результаты}\label{Sect::res}
+
+Исходный код программы представлен в листингах~\ref{lst:code1}--~\ref{lst:code3}.
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code1}]
+function derivativeAtPoint(f, x)
+    delta = 1e-3
+    return (f(x + delta) - f(x)) / delta
+end
+
+function secondDerivativeAtPoint(f, x)
+    delta = 1e-3
+    return (derivativeAtPoint(f, x + delta) - derivativeAtPoint(f, x)) / delta
+end
+
+function checkUnimodal(f, a, b, step, eps)
+    extremum = nothing
+
+    for x in a:step:b
+        if abs(derivativeAtPoint(f, x)) < eps
+            if !isnothing(extremum)
+                return nothing
+            end
+            extremum = x
+        end
+
+        if secondDerivativeAtPoint(f, x) <= 0
+            return nothing
+        end
+    end
+
+    return extremum
+end
+
+function findExtrBySegments(f, a, b, step, eps)
+    iters = 0
+
+    while abs(a - b) > eps
+        x1 = a + (b - a) / 3
+        x2 = a + (b - a) * 2 / 3
+
+        if f(x1) > f(x2)
+\end{lstlisting}
+\end{figure}
+\begin{figure}[!htb]
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code2}]
+            a = x1
+        else
+            b = x2
+        end
+
+        iters += 1
+    end
+
+    return (a + b) / 2, iters
+end
+
+function findExtrByGoldRatio(f, a, b, step, eps)
+    iters = 0
+
+    goldRatio = (5^.5 - 1) / 2
+    x1 = a + (1 - goldRatio) * (b - a)
+    x2 = a + goldRatio * (b - a)
+    x = (a + b) / 2
+
+    while abs(a - b) > eps
+        if f(x1) > f(x2)
+            x = x2
+            a = x1
+            x1 = x2
+            x2 = a + b - x2
+        else
+            x = x1
+            b = x2
+            x2 = x1
+            x1 = a + b - x1
+        end
+
+        iters += 1
+    end
+
+    return x, iters
+end
+
+function findExtrByFibbonachi(f, a, b, step, eps)
+    iters = 0
+
+    fib1, fib2, fib3 = 0, 1, 1
+    for i in 1:16
+        fib1 = fib2
+        fib2 = fib3
+        fib3 = fib1 + fib2
+    end
+    x1 = a + (fib1 / fib3) * (b - a)
+    x2 = a + b - x1
+    x = (a + b) / 2
+
+    while abs(a - b) > eps
+        if f(x1) > f(x2)
+            x = x2
+            a = x1
+\end{lstlisting}
+\end{figure}
+\begin{figure}[!htb]
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code3}]
+            x1 = x2
+            x2 = a + b - x2
+        else
+            x = x1
+            b = x2
+            x2 = x1
+            x1 = a + b - x1
+        end
+
+        iters += 1
+    end
+
+    return x, iters
+end
+
+f = x -> ((x - 9.876)^2 + 12.345)
+
+checkUnimodal(f, -100, 100, 2e-3, 1e-3)
+println(findExtrBySegments(f, -10, 10, 2e-3, 1e-3))
+println(findExtrByGoldRatio(f, -10, 10, 2e-3, 1e-3))
+println(findExtrByFibbonachi(f, -10, 10, 2e-3, 1e-3))
+\end{lstlisting}
+\end{figure}
+
+Результат запуска представлен в листинге~\ref{lst:code4}.
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code4}]
+9.876
+
+(9.876023150046766, 25)
+(9.875775199394639, 21)
+(9.87616099071189, 18)
+\end{lstlisting}
+\end{figure}
+
+\section{Выводы}\label{Sect::conclusions}
+
+Исходя из результатов исследования можно сделать вывод о том, что метод Фибоначи является в данном случае наиболее подходящим, судя по скорости сходимости алгоритма, в то время как метод золотого сечения показал себя лучше метода схлодящимися отрезками.
+
+\end{document}
