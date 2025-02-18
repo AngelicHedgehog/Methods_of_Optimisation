@@ -162,9 +162,9 @@
 \vspace{11em}
 
 \begin{center}
-\Large {\bf Лабораторная работа № 2} \\ 
+\Large {\bf Лабораторная работа № 1} \\ 
 \large {\bf по курсу <<Методы оптимизации>>} \\
-\large <<Алгоритмы поиска экстремума унимодальной функции>> 
+\large <<Поиск минимума унимодальной функции>> 
 \end{center}\normalsize
 
 \vspace{8em}
@@ -197,15 +197,24 @@
 
 \section{Задание}\label{Sect::task}
 
-Определить, является ли функция унимодальной и выпуклой.
-Сравнить скорость сходимости алгоритмов нахождения экстремума функции на отрезке: метод сходящихся отрезков, метод золотого сечения, метод разделением Фибоначчи.
+Определить интервал, на котором функция является унимодальной, алгоритм 
+определения унимодальности должен принимать на вход левую и правую точку 
+отрезка и возвращать false — если функция на этом отрезке не унимодальная, в 
+противном случае true.  
+Реализовать поиск минимума унимодальной функции на полученном 
+интервале методом прямого перебора, дихотомии (деление отрезка пополам), 
+золотого сечения и Фибоначчи с заданной точностью по вариантам. Результат 
+должен быть представлен на графике, точки минимизирующей последовательности должны быть выделены красным цветом, интервалы деления синим. 
+Точность вычисления точки минимума должна варьироваться. 
 
 \section{Результаты}\label{Sect::res}
 
-Исходный код программы представлен в листингах~\ref{lst:code1}--~\ref{lst:code2}.
+Исходный код программы представлен в листингах~\ref{lst:code1}-~\ref{lst:code4}.
 
 \begin{figure}[!htb]
 \begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code1}]
+using Plots
+
 function derivativeAtPoint(f, x)
     delta = 1e-3
     return (f(x + delta) - f(x)) / delta
@@ -216,49 +225,49 @@ function secondDerivativeAtPoint(f, x)
     return (derivativeAtPoint(f, x + delta) - derivativeAtPoint(f, x)) / delta
 end
 
-function checkUnimodal(f, a, b, step, eps)
-    extremum = nothing
-
+function findUnimodalIntervals(f, a, b, step)
+    intervals = []
+    actual_interval_start = a
+    
     for x in a:step:b
-        if abs(derivativeAtPoint(f, x)) < eps
-            if !isnothing(extremum)
-                return nothing
-            end
-            extremum = x
-        end
-
         if secondDerivativeAtPoint(f, x) <= 0
-            return nothing
+            if abs(actual_interval_start - x) > step * 2
+                push!(intervals, (actual_interval_start, x))
+            end
+            actual_interval_start = x
         end
     end
-
-    return extremum
+    if abs(actual_interval_start - b) > step * 2
+        push!(intervals, (actual_interval_start, b))
+    end
+\end{lstlisting}
+\end{figure}
+\begin{figure}[!htb]
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code2}]
+    return intervals
 end
 
 function findExtrBySegments(f, a, b, step, eps)
-    iters = 0
+    iters = []
 
     while abs(a - b) > eps
         x1 = a + (b - a) / 3
         x2 = a + (b - a) * 2 / 3
+
+        push!(iters, (a, x1, x2, b))
 
         if f(x1) > f(x2)
             a = x1
         else
             b = x2
         end
-
-        iters += 1
     end
 
     return (a + b) / 2, iters
 end
-\end{lstlisting}
-\end{figure}
-\begin{figure}[!htb]
-\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code1}]
+
 function findExtrByGoldRatio(f, a, b, step, eps)
-    iters = 0
+    iters = []
 
     goldRatio = (5^.5 - 1) / 2
     x1 = a + (1 - goldRatio) * (b - a)
@@ -266,6 +275,8 @@ function findExtrByGoldRatio(f, a, b, step, eps)
     x = (a + b) / 2
 
     while abs(a - b) > eps
+        push!(iters, (a, x1, x2, b))
+
         if f(x1) > f(x2)
             x = x2
             a = x1
@@ -277,18 +288,21 @@ function findExtrByGoldRatio(f, a, b, step, eps)
             x2 = x1
             x1 = a + b - x1
         end
-
-        iters += 1
     end
 
     return x, iters
 end
 
 function findExtrByFibbonachi(f, a, b, step, eps)
-    iters = 0
+    iters = []
 
     fib1, fib2, fib3 = 0, 1, 1
     for i in 1:16
+\end{lstlisting}
+\end{figure}
+\begin{figure}[!htb]
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code3}]
+
         fib1 = fib2
         fib2 = fib3
         fib3 = fib1 + fib2
@@ -298,6 +312,8 @@ function findExtrByFibbonachi(f, a, b, step, eps)
     x = (a + b) / 2
 
     while abs(a - b) > eps
+        push!(iters, (a, x1, x2, b))
+
         if f(x1) > f(x2)
             x = x2
             a = x1
@@ -309,31 +325,125 @@ function findExtrByFibbonachi(f, a, b, step, eps)
             x2 = x1
             x1 = a + b - x1
         end
-
-        iters += 1
     end
 
     return x, iters
 end
 
-f = x -> ((x - 9.876)^2 + 12.345)
-checkUnimodal(f, -100, 100, 2e-3, 1e-3)
-println(findExtrBySegments(f, -10, 10, 2e-3, 1e-3))
-println(findExtrByGoldRatio(f, -10, 10, 2e-3, 1e-3))
-println(findExtrByFibbonachi(f, -10, 10, 2e-3, 1e-3))
+f = x -> x ^ 4 - 2 * x ^ 2 + 3
+
+intervals = findUnimodalIntervals(f, -10, 10, 2e-6)
+
+interval_index = 1
+a = intervals[interval_index][1]
+b = intervals[interval_index][2]
+alg_step = 2e-3
+alg_eps = 1e-3
+
+X = range(a, b, step=alg_step)
+Y = [f(x) for x in X]
+Y_min = minimum(Y)
+Y_max = maximum(Y)
+prop_Y = c -> Y_max - (Y_max - Y_min) * c
+
+plot(X, Y, legend=false, title="ExtrBySegments")
+
+x0, iters = findExtrBySegments(f, a, b, alg_step, alg_eps)
+println(length(iters))
+for (i, iter) in enumerate(iters)
+    y_val = prop_Y(i / length(iters))
+
+    hline!([y_val], color="green")
+    scatter!([(iter[2], y_val), (iter[3], y_val)], color="blue")
+    scatter!([(iter[1], y_val), (iter[4], y_val)], color="red")
+end
+\end{lstlisting}
+\end{figure}
+\begin{figure}[!htb]
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code4}]
+
+plot!()
+
+X = range(a, b, step=alg_step)
+Y = [f(x) for x in X]
+Y_min = minimum(Y)
+Y_max = maximum(Y)
+prop_Y = c -> Y_max - (Y_max - Y_min) * c
+
+plot(X, Y, legend=false, title="ExtrByGoldRatio")
+
+x0, iters = findExtrByGoldRatio(f, a, b, alg_step, alg_eps)
+println(length(iters))
+for (i, iter) in enumerate(iters)
+    y_val = prop_Y(i / length(iters))
+
+    hline!([y_val], color="green")
+    scatter!([(iter[2], y_val), (iter[3], y_val)], color="blue")
+    scatter!([(iter[1], y_val), (iter[4], y_val)], color="red")
+end
+
+plot!()
+
+X = range(a, b, step=alg_step)
+Y = [f(x) for x in X]
+Y_min = minimum(Y)
+Y_max = maximum(Y)
+prop_Y = c -> Y_max - (Y_max - Y_min) * c
+
+plot(X, Y, legend=false, title="ExtrByFibbonachi")
+
+x0, iters = findExtrByFibbonachi(f, a, b, alg_step, alg_eps)
+println(length(iters))
+for (i, iter) in enumerate(iters)
+    y_val = prop_Y(i / length(iters))
+
+    hline!([y_val], color="green")
+    scatter!([(iter[2], y_val), (iter[3], y_val)], color="blue")
+    scatter!([(iter[1], y_val), (iter[4], y_val)], color="red")
+end
+
+plot!()
 \end{lstlisting}
 \end{figure}
 
-Результат запуска представлен в листинге ~\ref{fig:img1}.
+Результат запуска представлен в листинге ~\ref{lst:res1} и рисунках ~\ref{fig:img1}-~\ref{fig:img3}.
 
 \begin{figure}[!htb]
-\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:code1}]
-9.876
+\begin{lstlisting}[language={},caption={Нахождение минимумов функции},label={lst:res1}]
+(-10, -0.57835)
+(0.57635, 10)
 
-(9.876023150046766, 25)
-(9.875775199394639, 21)
-(9.87616099071189, 18)
+ExtrBySegments - 23
+ExtrByGoldRatio - 20
+ExtrByFibbonachi - 18
 \end{lstlisting}
 \end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img1}
+\caption{Результат работы алгоритма методом дихотомии}
+\label{fig:img1}
+\end{figure}
+
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img2}
+\caption{Результат работы алгоритма методом золотого сечения}
+\label{fig:img2}
+\end{figure}
+
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img3}
+\caption{Результат работы алгоритма методом Фиббоначи}
+\label{fig:img3}
+\end{figure}
+
+\section{Выводы}\label{Sect::task}
+
+ Исходя из результатов исследования можно сделать вывод о том, что метод Фибоначи является в данном случае наиболее подходящим, судя по скорости сходимости алгоритма, в то время как метод золотого сечения показал себя лучше метода схлодящимися отрезками, также известного как метод Дихотомии.
 
 \end{document}
